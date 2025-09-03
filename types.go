@@ -749,7 +749,11 @@ type Blob struct {
 	// blobs. This field is not currently used in the Gemini GenerateContent calls.
 	DisplayName string `json:"displayName,omitempty"`
 	// Required. Raw bytes.
-	Data []byte `json:"data,omitempty"`
+	// Data []byte `json:"data,omitempty"`
+	
+	// 2025/09/03 修改
+	// golang序列化base64问题
+ 	Data string `json:"data,omitempty"`
 	// Required. The IANA standard MIME type of the source data.
 	MIMEType string `json:"mimeType,omitempty"`
 }
@@ -882,14 +886,14 @@ func NewPartFromText(text string) *Part {
 }
 
 // NewPartFromBytes builds a Part from a given byte array and mime type.
-func NewPartFromBytes(data []byte, mimeType string) *Part {
-	return &Part{
-		InlineData: &Blob{
-			Data:     data,
-			MIMEType: mimeType,
-		},
-	}
-}
+// func NewPartFromBytes(data []byte, mimeType string) *Part {
+// 	return &Part{
+// 		InlineData: &Blob{
+// 			Data:     data,
+// 			MIMEType: mimeType,
+// 		},
+// 	}
+// }
 
 // NewPartFromFunctionCall builds a [FunctionCall] Part from the given function name and args.
 func NewPartFromFunctionCall(name string, args map[string]any) *Part {
@@ -978,14 +982,14 @@ func NewContentFromText(text string, role Role) *Content {
 
 // NewContentFromBytes builds a Content from a byte slice and mime type.
 // If role is the empty string, it defaults to [RoleUser].
-func NewContentFromBytes(data []byte, mimeType string, role Role) *Content {
-	return &Content{
-		Parts: []*Part{
-			NewPartFromBytes(data, mimeType),
-		},
-		Role: roleString(role),
-	}
-}
+// func NewContentFromBytes(data []byte, mimeType string, role Role) *Content {
+// 	return &Content{
+// 		Parts: []*Part{
+// 			NewPartFromBytes(data, mimeType),
+// 		},
+// 		Role: roleString(role),
+// 	}
+// }
 
 // NewContentFromURI builds a Content from a file URI and mime type.
 // If role is the empty string, it defaults to [RoleUser].
@@ -2800,7 +2804,7 @@ type EntityLabel struct {
 	// Optional. The label of the segmented entity.
 	Label string `json:"label,omitempty"`
 	// Optional. The confidence score of the detected label.
-	Score float32 `json:"score,ommitempty,string"`
+	Score float32 `json:"score,omitempty,string"`
 }
 
 // A generated image mask.
